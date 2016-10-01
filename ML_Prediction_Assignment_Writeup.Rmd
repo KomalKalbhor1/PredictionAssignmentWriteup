@@ -90,6 +90,8 @@ pml.validate <- predict(pml.rf, testing)
 confusionMatrix(pml.validate, testing$classe)
 ```
 
+We obtain a **99.1% accuracy** with an **out of sample error** of less then **1%**.
+
 ### Random forest visualization
 Here follows a visualization of the partial random forest method applied.
 ```{r plot,cache=TRUE}
