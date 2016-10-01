@@ -23,6 +23,7 @@ Preparation
 Following libraries are required for this assignment.
 
     library(dplyr)
+    library(magrittr)
     library(ggplot2)
     library(caret)
     library(rpart)
@@ -178,8 +179,17 @@ Now we will make **prediction, confusion matrix** that applies to the
     ## Detection Prevalence   0.2848   0.1961   0.1725   0.1633   0.1833
     ## Balanced Accuracy      0.9993   0.9962   0.9852   0.9916   0.9986
 
+Here we have the prediction for our **20 test cases**.
+
+    testing <- pml.feat %>% filter(is.na(pml.feat$problem_id) == FALSE)
+    print(predict(pml.rf, testing))
+
+    ##  [1] B A B A A E D B A A B C B A E E A B B B
+    ## Levels: A B C D E
+
 We obtain a **99.1% accuracy** with an **out of sample error** of less
-then **1%**.
+then **1%**. The out of sample error is very low as this would not be
+the case in real life situations.
 
 ### Random forest visualization
 
