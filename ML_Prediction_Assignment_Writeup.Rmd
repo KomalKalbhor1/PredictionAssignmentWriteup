@@ -2,7 +2,7 @@
 title: "ML Prediction writeup"
 author: "Stefaan Delanghe"
 date: "9/30/2016"
-output: pdf_document
+output: md_document
 ---
 
 ## Assignment
