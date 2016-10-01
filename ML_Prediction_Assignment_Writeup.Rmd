@@ -2,7 +2,7 @@
 title: "ML Prediction writeup"
 author: "Stefaan Delanghe"
 date: "9/30/2016"
-output: html_document
+output: pdf_document
 ---
 
 ## Assignment
@@ -15,14 +15,12 @@ In this project, your goal will be to use data from accelerometers on the belt, 
 ## Preparation
 Following libraries are required for this assignment.
 
-```{r lib, cache=TRUE, tidy=TRUE}
+```{r lib, cache=TRUE, tidy=TRUE, message=FALSE}
 library(dplyr)
 library(ggplot2)
 library(caret)
 library(rpart)
 library(rpart.plot)
-library(doMC)
-registerDoMC(cores = 7)
 ```
 
 ## Load data
@@ -48,7 +46,7 @@ pml.testing$classe <- NA
 pml.training$problem_id <- NA
 
 pml <- rbind(pml.training, pml.testing)
-pml <- select(pml, matches("arm|belt|dumbell|classe"))
+pml <- select(pml, matches("arm|belt|dumbell|classe|problem_id"))
 ```
 
 In order for our prediction to be most accurate we will remove the rows that contain NA values.
