@@ -4,7 +4,7 @@
 ## Content
 * The ML case study can be found in the file **ML_Prediction_Assignment_Writeup.Rmd**
 * In root directory you can find both csv files required for this assignment.
-* The case study is compiled into an html and pdf format. 
+* The case study is compiled into a html format. 
 * One plot has been created and can be viewed in the html and pdf file.
 
 ## Assigment
