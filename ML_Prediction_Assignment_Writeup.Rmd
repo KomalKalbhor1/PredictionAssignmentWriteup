@@ -17,6 +17,7 @@ Following libraries are required for this assignment.
 
 ```{r lib, cache=TRUE, tidy=TRUE, message=FALSE}
 library(dplyr)
+library(magrittr)
 library(ggplot2)
 library(caret)
 library(rpart)
@@ -90,6 +91,12 @@ pml.validate <- predict(pml.rf, testing)
 confusionMatrix(pml.validate, testing$classe)
 ```
 
+Here we have the prediction for our **20 test cases**.
+```{r predict,cache=TRUE,message=FALSE}
+testing <- pml.feat %>% filter(is.na(pml.feat$problem_id) == FALSE)
+print(predict(pml.rf, testing))
+```
+
 We obtain a **99.1% accuracy** with an **out of sample error** of less then **1%**. The out of sample error is very low as this would not be the case in real life situations.
 
 ### Random forest visualization
@@ -98,6 +105,4 @@ Here follows a visualization of the partial random forest method applied.
 pml.tree <- rpart(classe ~ ., data=training, method="class")
 prp(pml.tree)
 ```
-
-
 

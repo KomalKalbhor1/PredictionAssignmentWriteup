@@ -9,3 +9,4 @@ foreach
 iterators
 doMC
 randomForest
+magrittr
