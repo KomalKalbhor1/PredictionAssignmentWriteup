@@ -1,0 +1,97 @@
+Assignment
+----------
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now
+possible to collect a large amount of data about personal activity
+relatively inexpensively. These type of devices are part of the
+quantified self movement ??? a group of enthusiasts who take
+measurements about themselves regularly to improve their health, to find
+patterns in their behavior, or because they are tech geeks. One thing
+that people regularly do is quantify how much of a particular activity
+they do, but they rarely quantify how well they do it.
+
+In this project, your goal will be to use data from accelerometers on
+the belt, forearm, arm, and dumbell of 6 participants. They were asked
+to perform barbell lifts correctly and incorrectly in 5 different ways.
+More information is available from the website here:
+<http://groupware.les.inf.puc-rio.br/har> (see the section on the Weight
+Lifting Exercise Dataset).
+
+Preparation
+-----------
+
+Following libraries are required for this assignment.
+
+`{r lib, cache=TRUE, tidy=TRUE, message=FALSE} library(dplyr) library(ggplot2) library(caret) library(rpart) library(rpart.plot)`
+
+Load data
+---------
+
+We download the prediction writeup data and load the csv files.
+`{r load, cache=TRUE,tidy=TRUE} download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", destfile = "pml-training.csv") download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv", destfile = "pml-testing.csv") pml.training <- read.csv("pml-training.csv") pml.testing <- read.csv("pml-testing.csv")`
+
+Tidy data
+---------
+
+Before we get into the prediction we require to clean the data. In this
+case the data contains alot of NA values, which can influence our
+prediction in a negative way. So we will clean up the data in order to
+have an accurate prediction as possible.
+
+Our first clean up is reducing the number of columns to the onces that
+have been mentioned in the assignment. We only use the columns that have
+belt, forearm, arm, and dumbell.
+
+We only use one dataset in order to perform the clean up. We bind the
+training and test set into the pml set. After that we filter only the
+columns with arm, beld, dumbell, classe.
+
+The training and test set do not have the same number of columns. So
+they can not be bind by default. For this we will add each missing
+column to each set. \`\`\`{r tidy, cache=TRUE}
+pml.testing*c**l**a**s**s**e* &lt; −*N**A**p**m**l*.*t**r**a**i**n**i**n**g*problem\_id
+&lt;- NA
+
+pml &lt;- rbind(pml.training, pml.testing) pml &lt;- select(pml,
+matches("arm|belt|dumbell|classe|problem\_id")) \`\`\`
+
+In order for our prediction to be most accurate we will remove the rows
+that contain NA values.
+
+`{r tidy2,cache=TRUE} pml.cols <- c(colnames(pml[colSums(is.na(pml)) == 0]), colnames(pml[115:116])) pml.feat <- pml[pml.cols] pml.feat %>% filter(complete.cases(.))`
+
+Train model
+-----------
+
+Before we train our model we require to the creation of a training and a
+test set. We use the pml set for the creation of both.
+`{r part,cache=TRUE} pml.part <- createDataPartition(y = pml.feat$classe, p=0.7, list=FALSE) training <- pml.feat[pml.part,]  testing <- pml.feat[-pml.part,]`
+
+Now we will train our model with the **random forest** method. This
+algorithm as it selects most important variables automatically. A **5
+fold cross validation** to the traning of the model. In order to dermine
+the best mehod we could have applied an ada boost method on the set. Due
+to the limitations of the project random forest will suffice.
+
+The training of the model can take a long time. Our computer works
+usually with one core. We increase the number of cores assigned to the
+training of the model to increase performance.
+
+`{r train,cache=TRUE,message=FALSE} library(doMC) registerDoMC(cores = 8) pml.rf <- train(as.factor(classe)~., data = training[1:40],                     method = "rf", na.action = na.omit,                    trControl = trainControl(method = "cv", 5),allowParallel = TRUE) print(pml.rf)`
+
+This method seems like a good fit as we achieve a high accuracy.
+
+Confusion and statistics
+------------------------
+
+Now we will make **prediction, confusion matrix** that applies to the
+**20 test cases** available within the testing set.
+
+`{r conclusion,cache=TRUE} pml.validate <- predict(pml.rf, testing) confusionMatrix(pml.validate, testing$classe)`
+We obtain a 99.1% accuracy with an out of sample error
+
+### Random forest visualization
+
+Here follows a visualization of the partial random forest method
+applied.
+`{r plot,cache=TRUE} pml.tree <- rpart(classe ~ ., data=training, method="class") prp(pml.tree)`
