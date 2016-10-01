@@ -15,7 +15,7 @@ In this project, your goal will be to use data from accelerometers on the belt, 
 ## Preparation
 Following libraries are required for this assignment.
 
-```{r lib, cache=TRUE, tidy=TRUE, message=FALSE}
+```{r lib, cache=FALSE, tidy=TRUE, message=FALSE}
 library(dplyr)
 library(magrittr)
 library(ggplot2)
@@ -101,7 +101,7 @@ We obtain a **99.1% accuracy** with an **out of sample error** of less then **1%
 
 ### Random forest visualization
 Here follows a visualization of the partial random forest method applied.
-```{r plot,cache=TRUE}
+```{r plot,cache=FALSE}
 pml.tree <- rpart(classe ~ ., data=training, method="class")
 prp(pml.tree)
 ```
